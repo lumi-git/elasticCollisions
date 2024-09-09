@@ -85,7 +85,8 @@ def update(particles,collisionSystem):
         if p.y >= GLOBAL.SCREENSIZE[1]-p.size or p.y <= p.size:
             p.vy = -p.vy
             p.y = max(p.size,min(GLOBAL.SCREENSIZE[1]-p.size,p.y))
-
+        
+        
         
 
     pg.display.set_caption(f"fps: {round(clock.get_fps())} | Particles: {len(particles)} | Total Energy: {totalEnergy}")

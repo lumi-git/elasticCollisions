@@ -24,11 +24,8 @@ def circleCircleCollision(pa,pb):
     elif pa.static:
         return
 
-    closestX = clamp(pa.x, pb.x - pb.size*2 / 2, pb.x + pb.size*2 / 2)
-    closestY = clamp(pa.y, pb.y - pb.size*2 / 2, pb.y + pb.size*2 / 2)
-
-    dx = pa.x - closestX
-    dy = pa.y - closestY
+    dx = pa.x - pb.x
+    dy = pa.y - pb.y
     distance = math.sqrt(dx**2 + dy**2)
 
     if distance <= pa.size + pb.size:
@@ -44,7 +41,7 @@ def circleCircleCollision(pa,pb):
 
         m1 = pa.mass
         m2 = pb.mass
-        impulse = 2 * vn / (m1 + m2)
+        impulse = 2 * vn / (m1 + m2) *GLOBAL.FRICTION
 
         pa.vx -= impulse * m2 * nx
         pa.vy -= impulse * m2 * ny
@@ -92,7 +89,7 @@ def circleRectangleCollision(pa,pb):
 
         m1 = pa.mass
         m2 = pb.mass
-        impulse = 2 * vn / (m1 + m2)
+        impulse = 2 * vn / (m1 + m2) *GLOBAL.FRICTION
 
         pa.vx -= impulse * m2 * nx
         pa.vy -= impulse * m2 * ny
@@ -157,10 +154,12 @@ def rectangleRectangleCollision(pa,pb):
 
         m1 = pa.mass
         m2 = pb.mass
-        impulse = 2 * vn / (m1 + m2)
+        impulse = 2 * vn / (m1 + m2) *GLOBAL.FRICTION
 
-        pa.vx -= impulse * m2 * nx
-        pa.vy -= impulse * m2 * ny
-        pb.vx += impulse * m1 * nx
-        pb.vy += impulse * m1 * ny
+        if not pa.static:
+            pa.vx -= impulse * m2 * nx
+            pa.vy -= impulse * m2 * ny
+        if not pb.static:
+            pb.vx += impulse * m1 * nx
+            pb.vy += impulse * m1 * ny
 

@@ -2,6 +2,7 @@ import collisions
 from GLOBAL import GLOBAL
 from math import sqrt,ceil,floor
 import pygame as pg
+
 class spatialHashMap():
     INSTANCE = None
     def __init__(self,cellsSize=100):
