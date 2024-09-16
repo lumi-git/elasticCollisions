@@ -5,11 +5,13 @@ import pygame as pg
 
 class spatialHashMap():
     INSTANCE = None
-    def __init__(self,cellsSize=100):
-        self.cellsSize = cellsSize
+    def __init__(self):
+        self.screen = pg.display.get_surface()
+
         self.particles = {}
         self.map = dict()
         spatialHashMap.INSTANCE = self
+
 
     def Instantiate(self,particle):
         self.particles[particle.id] = particle
@@ -43,20 +45,20 @@ class spatialHashMap():
         pbx = particle.x + particle.size
         pby = particle.y + particle.size
         if GLOBAL.DEBUG:
-            pg.draw.circle(screen, (255, 255, 0), (int(pax), int(pay)), 1)#yellow
-            pg.draw.circle(screen, (255, 0, 0), (int(pbx), int(pay)), 1)#red
-            pg.draw.circle(screen, (0, 255, 0), (int(pax), int(pby)), 1)#green
-            pg.draw.circle(screen, (0, 255, 255), (int(pbx), int(pby)), 1) #blue
+            pg.draw.circle(self.screen, (255, 255, 0), (int(pax), int(pay)), 1)#yellow
+            pg.draw.circle(self.screen, (255, 0, 0), (int(pbx), int(pay)), 1)#red
+            pg.draw.circle(self.screen, (0, 255, 0), (int(pax), int(pby)), 1)#green
+            pg.draw.circle(self.screen, (0, 255, 255), (int(pbx), int(pby)), 1) #blue
         
-        for i in range(floor(pax/self.cellsSize),ceil(pbx/self.cellsSize)):
-            for j in range(floor(pay/self.cellsSize),ceil(pby/self.cellsSize)):
+        for i in range(floor(pax/GLOBAL.CELLSIZE),ceil(pbx/GLOBAL.CELLSIZE)):
+            for j in range(floor(pay/GLOBAL.CELLSIZE),ceil(pby/GLOBAL.CELLSIZE)):
                 positions.append(128633*i + 56127482*j)
                 if GLOBAL.DEBUG:
-                    pg.draw.rect(screen, (255, 255, 255), (i*self.cellsSize,j*self.cellsSize,self.cellsSize,self.cellsSize))
+                    pg.draw.rect(self.screen, (255, 255, 255), (i*GLOBAL.CELLSIZE,j*GLOBAL.CELLSIZE,GLOBAL.CELLSIZE,GLOBAL.CELLSIZE))
         return positions
 
     def clear(self):
         self.map = dict()
 
     def draw(self,screen):
-        pg.draw.rectangle
+        pass

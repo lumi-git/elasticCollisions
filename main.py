@@ -3,7 +3,7 @@ import random
 from collisions import *
 from GLOBAL import GLOBAL
 from spatialHashmap import spatialHashMap
-
+from threading import Thread
 
 class particle:
     def __init__(self, x, y, vx, vy, size = 10,mass=1,shape = "circle",static = False):
@@ -37,7 +37,7 @@ clock = pg.time.Clock()
 
 def main():
     particleSize = 30
-    collisionSystem = spatialHashMap(particleSize)
+    collisionSystem = spatialHashMap()
     initWithRandom(collisionSystem,2,particleSize,10)
 
     pg.init()
@@ -85,14 +85,35 @@ def update(particles,collisionSystem):
         if p.y >= GLOBAL.SCREENSIZE[1]-p.size or p.y <= p.size:
             p.vy = -p.vy
             p.y = max(p.size,min(GLOBAL.SCREENSIZE[1]-p.size,p.y))
-        
-        
-        
-
     pg.display.set_caption(f"fps: {round(clock.get_fps())} | Particles: {len(particles)} | Total Energy: {totalEnergy}")
 
     collisionSystem.bordPhase()
     collisionSystem.clear()
 
+
+def shell():
+    while True:
+        cmd = input("$> ")
+        command = cmd.split(" ")[0]
+        args = cmd.split(" ")[1:] 
+        if cmd == "exit":
+            exit()
+        elif command == "GLOBAL":
+            if args[0] == "GRAVITY":
+                GLOBAL.GRAVITY = float(args[1])
+            elif args[0] == "FRICTION":
+                GLOBAL.FRICTION = float(args[1])
+            elif args[0] == "DEBUG":
+                GLOBAL.DEBUG = not GLOBAL.DEBUG
+            elif args[0] == "CELLSIZE":
+                GLOBAL.CELLSIZE = int(args[1])
+
+        else:
+            print("Unknown Command")
+
 if __name__ == '__main__':
+
+    shellThread = Thread(target=shell)
+    shellThread.start()
     main()
+
