@@ -24,7 +24,10 @@ class particle:
     def move(self):
         self.x += self.vx
         self.y += self.vy
-
+        # switch color based on speed, green = slow, red = fast
+        combinedSpeed = abs(self.vx) + abs(self.vy)
+        color = max(min(255,int(combinedSpeed*255/1)),0)
+        self.color = (255-color,color,0)
 
 def initWithRandom(collisionSystem,n,size,speed):
     for _ in range(n):
@@ -36,9 +39,9 @@ screen = pg.display.set_mode((GLOBAL.SCREENSIZE[0], GLOBAL.SCREENSIZE[1]), pg.RE
 clock = pg.time.Clock()
 
 def main():
-    particleSize = 30
+    particleSize = 5
     collisionSystem = spatialHashMap()
-    initWithRandom(collisionSystem,2,particleSize,10)
+    initWithRandom(collisionSystem,4000,particleSize,1)
 
     pg.init()
 
@@ -62,7 +65,7 @@ def main():
                     collisionSystem.Instantiate(particle(event.pos[0], event.pos[1],0, 0,particleSize,shape="rectangle"))
 
 
-        screen.fill((0, 0, 0))
+        screen.fill((10, 10, 10))
         update(collisionSystem.particles.values(),collisionSystem)
         for p in collisionSystem.particles.values():
             if p.shape == "circle":
@@ -70,7 +73,7 @@ def main():
             elif p.shape == "rectangle":
                 pg.draw.rect(screen, p.color, (p.x-p.size, p.y-p.size, p.size*2, p.size*2))
         pg.display.flip()
-        clock.tick(60)
+        clock.tick(GLOBAL.FPS)
 
 
 def update(particles,collisionSystem):
@@ -98,7 +101,7 @@ def shell():
         args = cmd.split(" ")[1:] 
         if cmd == "exit":
             exit()
-        elif command == "GLOBAL":
+        elif command == "GLOBAL" and len(args) >= 1:
             if args[0] == "GRAVITY":
                 GLOBAL.GRAVITY = float(args[1])
             elif args[0] == "FRICTION":
@@ -107,7 +110,8 @@ def shell():
                 GLOBAL.DEBUG = not GLOBAL.DEBUG
             elif args[0] == "CELLSIZE":
                 GLOBAL.CELLSIZE = int(args[1])
-
+            elif args[0] == "FPS":
+                GLOBAL.FPS = int(args[1])
         else:
             print("Unknown Command")
 
